@@ -62,8 +62,7 @@ class CollectionNode extends Node {
         super(field);
         this.charset = charset;
 
-        ParamField annotation = ReflectionUtils.getAnnotation(field, ParamField.class);
-        length = annotation.length();
+        evaluateSizeByField(field);
         memberType = ReflectionUtils.getCollectionFirstMemberType(field);
         memberNode = createMemberNode();
     }
@@ -98,6 +97,11 @@ class CollectionNode extends Node {
         if (collection == null) {
             return null;
         }
+
+        // 需要重新根据 field 定义获取 size。
+        // 使用缓存的 serialize 时候的 size 可能产生 underflow
+        evaluateSizeByField(field);
+
         if (length <= 0) {
             // buffer tail
             while (buffer.position() < buffer.limit()) {
@@ -113,6 +117,11 @@ class CollectionNode extends Node {
         } else {
             return collection;
         }
+    }
+
+    private void evaluateSizeByField(Field field) {
+        ParamField annotation = ReflectionUtils.getAnnotation(field, ParamField.class);
+        length = annotation.length();
     }
 
     private Node createMemberNode() {

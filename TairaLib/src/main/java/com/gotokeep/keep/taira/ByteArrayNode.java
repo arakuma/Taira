@@ -64,6 +64,8 @@ class ByteArrayNode extends Node {
 
     @Override
     public Object deserialize(ByteBuffer buffer) {
+        byteSize = evaluateSize(field);
+
         byte[] bytes;
         if (byteSize <= 0) {
             // tail byte array

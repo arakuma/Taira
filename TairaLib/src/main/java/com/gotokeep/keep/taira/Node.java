@@ -37,7 +37,7 @@ abstract class Node {
     /**
      * node field, may be null
      */
-    Field field;
+    protected Field field;
 
     /**
      * node byte size in buffer
