@@ -45,7 +45,10 @@ class ByteArrayNode extends Node {
     @Override
     public void evaluateSize(Object value) {
         super.evaluateSize(value);
-        if (byteSize <= 0) {
+        // 比较 field 定义和实际值情况，更新缓存
+        int fieldByteSize = evaluateSize(field);
+        if (fieldByteSize <= 0) {
+            // field 定义在最后一项使用了默认 bytes = 0，利用实际值更新
             byteSize = valueToByteArray(value).length;
         }
     }
