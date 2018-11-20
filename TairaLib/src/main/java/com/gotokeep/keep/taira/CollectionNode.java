@@ -68,14 +68,13 @@ class CollectionNode extends Node {
     }
 
     @Override
-    public void evaluateSize(Object value) {
+    public int evaluateSize(Object value) {
         int collectionLength = getCollectionLength(value);
-        memberNode.evaluateSize(null);
-        int memberByteSize = memberNode.byteSize;
+        int memberByteSize = memberNode.evaluateSize(null);
         if (length <= 0) {
-            byteSize = collectionLength * memberByteSize;
+            return collectionLength * memberByteSize;
         } else {
-            byteSize = length * memberByteSize;
+            return length * memberByteSize;
         }
     }
 
@@ -162,8 +161,8 @@ class CollectionNode extends Node {
         }
         // node with length, fill remain empty bytes
         if (length > 0) {
-            memberNode.evaluateSize(null);
-            buffer.put(new byte[(length - collectionLength) * memberNode.byteSize]);
+            int memberByteSize = memberNode.evaluateSize(null);
+            buffer.put(new byte[(length - collectionLength) * memberByteSize]);
         }
     }
 
